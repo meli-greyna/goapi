@@ -54,3 +54,49 @@ func (h *Handlers) SearchProducts(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, products)
 	}
 }
+
+func (h *Handlers) CreateProduct(ctx *gin.Context) {
+	var req gin.H
+
+	err := ctx.ShouldBindJSON(&req)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error:": err})
+		return
+	}
+
+	name, quantity, code_value, is_published, expiration, price := req["name"], req["quantity"], req["code_value"], req["is_published"], req["expiration"], req["price"]
+
+	if is_published == nil {
+		is_published = false
+	}
+
+	if name == nil ||
+		quantity == nil ||
+		code_value == nil ||
+		expiration == nil ||
+		price == nil {
+		ctx.String(http.StatusBadRequest, "invalid product data")
+		return
+	}
+
+	for _, p := range *h.Products {
+		if p.CodeValue == req["code_value"] {
+			ctx.String(http.StatusBadRequest, "duplicated code_value")
+			return
+		}
+	}
+
+	product := product.Product{
+		Id:          (*h.Products)[len(*h.Products)-1].Id + 1,
+		Name:        name.(string),
+		Quantity:    int(quantity.(float64)),
+		CodeValue:   code_value.(string),
+		IsPublished: is_published.(bool),
+		Expiration:  expiration.(string),
+		Price:       price.(float64),
+	}
+
+	*h.Products = append(*h.Products, product)
+
+	ctx.JSON(http.StatusOK, product)
+}

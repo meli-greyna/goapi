@@ -22,6 +22,7 @@ func (r *Router) MapPaths() {
 		{"GET", "/products", r.Handlers.GetProducts},
 		{"GET", "/products/:id", r.Handlers.GetProductById},
 		{"GET", "/products/search", r.Handlers.SearchProducts},
+		{"POST", "/products", r.Handlers.CreateProduct},
 	}
 
 	for _, resource := range resources {
