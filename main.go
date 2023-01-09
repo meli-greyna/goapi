@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/meli-greyna/goapi/handlers"
 	"github.com/meli-greyna/goapi/product"
 	"github.com/meli-greyna/goapi/router"
 )
@@ -14,7 +15,11 @@ func main() {
 		log.Fatal(err)
 	}
 
-	router := router.Router{Server: gin.Default(), Products: &products}
+	router := router.Router{
+		Server:   gin.Default(),
+		Handlers: &handlers.Handlers{Products: &products},
+	}
+
 	router.MapPaths()
 
 	router.Server.Run(":8080")
