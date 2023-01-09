@@ -6,9 +6,8 @@ import (
 )
 
 type Router struct {
-	Server    *gin.Engine
-	Handlers  *handlers.Handlers
-	resources []resource
+	Server   *gin.Engine
+	Handlers *handlers.Handlers
 }
 
 type resource struct {
@@ -18,14 +17,14 @@ type resource struct {
 }
 
 func (r *Router) MapPaths() {
-	r.resources = []resource{
+	resources := []resource{
 		{"GET", "/ping", r.Handlers.Ping},
 		{"GET", "/products", r.Handlers.GetProducts},
 		{"GET", "/products/:id", r.Handlers.GetProductById},
 		{"GET", "/products/search", r.Handlers.SearchProducts},
 	}
 
-	for _, resource := range r.resources {
+	for _, resource := range resources {
 		r.Server.Handle(resource.method, resource.path, resource.callback)
 	}
 }
